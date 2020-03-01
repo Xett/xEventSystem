@@ -1,6 +1,11 @@
 #include <iostream>
 #include "Event.h"
 
+Event::Event()
+{
+    this->name = "";
+}
+
 Event::Event(const char* name)
 {
     this->name = name;
