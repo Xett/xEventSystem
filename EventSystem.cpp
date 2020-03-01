@@ -2,8 +2,8 @@
 #include <list>
 #include <map>
 #include <thread>
-#include "EventSystem.h"
 #include "Event.h"
+#include "EventSystem.h"
 
 EventSystem::EventSystem()
 {
