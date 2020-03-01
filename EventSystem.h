@@ -1,8 +1,8 @@
-﻿#include "Event.h"
-#include <iostream>
+﻿#include <iostream>
 #include <list>
 #include <map>
 #include <thread>
+class Event;
 #ifndef EVENT_SYSTEM_H
 #define EVENT_SYSTEM_H
 class EventSystem

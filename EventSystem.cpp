@@ -3,6 +3,7 @@
 #include <map>
 #include <thread>
 #include "EventSystem.h"
+#include "Event.h"
 
 EventSystem::EventSystem()
 {
