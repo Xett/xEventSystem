@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 3.8)
 project ("xEventSystem")
 
 # Add source to this project's executable.
-add_library (xEventSystem STATIC "Event.cpp" "Event.h" "EventSystem.cpp" "EventSystem.h")
+add_library (xEventSystem STATIC "Event.cpp" "Event.h" "EventDispatcher.h" "EventDispatcher.cpp" "EventSystem.cpp" "EventSystem.h")
 
 add_executable( EventSystemTest "EventSystemTest.cpp")
 
