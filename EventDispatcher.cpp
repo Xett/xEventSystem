@@ -1,13 +1,22 @@
 #include "Event.h"
+#include "EventSystem.h"
 #include "EventDispatcher.h"
 
 EventDispatcher::EventDispatcher()
 {
-    this->id = -1;
+    
 }
-EventDispatcher::EventDispatcher(int id)
+
+EventDispatcher::EventDispatcher(EventSystem* event_system)
+{
+    this->id = -1;
+    this->event_system = event_system;
+}
+
+EventDispatcher::EventDispatcher(EventSystem* event_system, int id)
 {
     this->id = id;
+    this->event_system = event_system;
 }
 
 Event EventDispatcher::DispatchEvent()

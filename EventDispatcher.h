@@ -10,7 +10,8 @@ class EventDispatcher
 	EventSystem* event_system;
 public:
 	EventDispatcher();
-	EventDispatcher(int id);
+	EventDispatcher(EventSystem* event_system);
+	EventDispatcher(EventSystem* event_system, int id);
 	Event DispatchEvent();
 	bool operator==(const EventDispatcher& a);
 	int GetId();

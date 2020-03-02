@@ -28,11 +28,11 @@ TestEvent2::TestEvent2() : Event(TestEventID2)
 class TestEventDispatcher : public EventDispatcher
 {
 public:
-    TestEventDispatcher();
+    TestEventDispatcher(EventSystem* event_system);
     Event DispatchEvent();
 };
 
-TestEventDispatcher::TestEventDispatcher() : EventDispatcher(TestEventID)
+TestEventDispatcher::TestEventDispatcher(EventSystem* event_system) : EventDispatcher(event_system, TestEventID)
 {
 
 }
@@ -45,11 +45,11 @@ Event TestEventDispatcher::DispatchEvent()
 class TestEventDispatcher2 : public EventDispatcher
 {
 public:
-    TestEventDispatcher2();
+    TestEventDispatcher2(EventSystem* event_system);
     Event DispatchEvent();
 };
 
-TestEventDispatcher2::TestEventDispatcher2() : EventDispatcher(TestEventID2)
+TestEventDispatcher2::TestEventDispatcher2(EventSystem* event_system) : EventDispatcher(event_system, TestEventID2)
 {
 
 }
@@ -72,9 +72,9 @@ int main()
     {
         std::cout << "Success!\n";
     }
-    TestEventDispatcher test_dispatcher = TestEventDispatcher();
+    TestEventDispatcher test_dispatcher = TestEventDispatcher(event_system);
     int event_id = test_dispatcher.GetId();
-    TestEventDispatcher2 test_dispatcher2 = TestEventDispatcher2();
+    TestEventDispatcher2 test_dispatcher2 = TestEventDispatcher2(event_system);
     int event_id2 = test_dispatcher2.GetId();
     event_system->AddEvent(test_dispatcher);
     event_system->AddEvent(test_dispatcher2);
