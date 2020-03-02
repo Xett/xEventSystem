@@ -3,38 +3,47 @@
 #include <map>
 #include <thread>
 #include "Event.h"
+#include "EventDispatcher.h"
 #include "EventSystem.h"
 
 EventSystem::EventSystem()
 {
     std::list<std::thread>* threads = new std::list<std::thread>;
-    std::map<const char*, std::list<Event>>* events = new std::map<const char*, std::list<Event>>();
+    std::map<int, EventDispatcher>* events = new std::map<int, EventDispatcher>();
     std::list<Event>* event_queue = new std::list<Event>();
 }
 
-void EventSystem::AddEvent(const char* event_name)
+void EventSystem::AddEvent(EventDispatcher dispatcher)
 {
-    events.insert(std::pair<const char*, std::list<Event>>(event_name, std::list<Event>()));
+    events.insert(std::pair<int, EventDispatcher>(dispatcher.GetId(), dispatcher));
 }
 
-void EventSystem::RemoveEvent(const char* event_name)
+void EventSystem::RemoveEvent(EventDispatcher dispatcher)
 {
-    events.erase(events.find(event_name));
+    events.erase(events.find(dispatcher.GetId()));
 }
 
-void EventSystem::Bind(const char* event_name, Event event_return_function)
+void EventSystem::Bind(int event_id_parent, int event_id_child)
 {
-    events[event_name].push_front(event_return_function);
+    events[event_id_parent].GetChildrenIds()->push_back(event_id_child);
+    if (events[event_id_parent].GetChildrenIds()->size() != 0)
+    {
+        std::cout << events[event_id_parent].GetChildrenIds()->front();
+    }
 }
 
-void EventSystem::Unbind(const char* event_name, Event event_return_function)
+void EventSystem::Unbind(int event_id_parent, int event_id_child)
 {
-    events[event_name].erase(std::find(events[event_name].begin(), events[event_name].end(), event_return_function));
+    events[event_id_parent].GetChildrenIds()->remove(event_id_child);
 }
 
-void EventSystem::CallEvent(const char* event_name)
+void EventSystem::CallEvent(int event_id)
 {
-    event_queue.insert(event_queue.end(), events[event_name].begin(), events[event_name].end());
+    event_queue.push_back(events[event_id].DispatchEvent());
+    if (events[event_id].GetChildrenIds()->size() != 0)
+    {
+        this->CallEvent(events[event_id].GetChildrenIds()->front());
+    }    
 }
 
 void EventSystem::ProcessQueue()

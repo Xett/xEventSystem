@@ -1,25 +1,21 @@
 #include <iostream>
 #include "Event.h"
 
-Event::Event()
-{
-    this->name = "";
-}
 
-Event::Event(const char* name)
+Event::Event(int id)
 {
-    this->name = name;
+    this->id = id;
 }
 
 void Event::Process()
 {
-    std::cout << "Event Process: " << this->name << "\n";
+    std::cout << "Event Process: " << this->id << "\n";
     std::cout.flush();
 }
 
 bool Event::operator==(const Event& a)
 {
-    if (this->name == a.name)
+    if (this->id == a.id)
     {
         return true;
     }

@@ -4,10 +4,9 @@ class Event
 {
 
 public:
-    Event();
-    Event(const char* name);
+    Event(int id);
     void Process();
     bool operator==(const Event& a);
-    const char* name;
+    int id;
 };
 #endif
