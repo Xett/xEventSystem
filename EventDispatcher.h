@@ -7,7 +7,6 @@ class EventDispatcher
 {
 	int id;
 	std::list<int> children_ids;
-	EventSystem* event_system;
 public:
 	EventDispatcher();
 	EventDispatcher(EventSystem* event_system);
@@ -16,5 +15,6 @@ public:
 	bool operator==(const EventDispatcher& a);
 	int GetId();
 	std::list<int>* GetChildrenIds();
+	EventSystem* event_system;
 };
 #endif
