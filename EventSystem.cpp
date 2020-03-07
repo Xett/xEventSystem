@@ -1,57 +1,50 @@
-﻿#include <iostream>
-#include <list>
-#include <map>
-#include <thread>
-#include "Event.h"
+﻿#include "Event.h"
 #include "EventDispatcher.h"
 #include "EventSystem.h"
 
 EventSystem::EventSystem()
 {
-    std::list<std::thread>* threads = new std::list<std::thread>;
-    std::map<int, EventDispatcher>* events = new std::map<int, EventDispatcher>();
-    std::list<Event>* event_queue = new std::list<Event>();
-}
-
-void EventSystem::AddEvent(EventDispatcher dispatcher)
-{
-    events.insert(std::pair<int, EventDispatcher>(dispatcher.GetId(), dispatcher));
-}
-
-void EventSystem::RemoveEvent(EventDispatcher dispatcher)
-{
-    events.erase(events.find(dispatcher.GetId()));
-}
-
-void EventSystem::Bind(int event_id_parent, int event_id_child)
-{
-    events[event_id_parent].GetChildrenIds()->push_back(event_id_child);
-    if (events[event_id_parent].GetChildrenIds()->size() != 0)
-    {
-        std::cout << events[event_id_parent].GetChildrenIds()->front();
-    }
-}
-
-void EventSystem::Unbind(int event_id_parent, int event_id_child)
-{
-    events[event_id_parent].GetChildrenIds()->remove(event_id_child);
+    std::map<int, EventDispatcher*> event_dispatchers = std::map<int, EventDispatcher*>();
+    std::list<EventDispatcher*> event_queue = std::list<EventDispatcher*>();
+    std::list<std::thread> threads = std::list<std::thread>();
 }
 
 void EventSystem::CallEvent(int event_id)
 {
-    event_queue.push_back(events[event_id].DispatchEvent());
-    if (events[event_id].GetChildrenIds()->size() != 0)
-    {
-        this->CallEvent(events[event_id].GetChildrenIds()->front());
-    }    
+    event_queue.push_back(event_dispatchers[event_id]); 
 }
+
+void EventSystem::AddEvent(EventDispatcher &event_dispatcher)
+{
+    event_dispatchers.insert(std::pair<int, EventDispatcher*>(event_dispatcher.GetId(), &event_dispatcher));
+}
+
+void EventSystem::RemoveEvent(EventDispatcher &event_dispatcher)
+{
+    event_dispatchers.erase(event_dispatchers.find(event_dispatcher.GetId()));
+}
+
+void EventSystem::Bind(int event_id, CallbackFunction callback_function)
+{
+    event_dispatchers[event_id]->GetCallbacks()->push_back(callback_function);
+}
+
+//void EventSystem::Unbind(int event_id, void* callback_function)
+//{
+//    event_dispatchers[event_id]->GetCallbacks()->remove(&callback_function);
+//}
 
 void EventSystem::ProcessQueue()
 {
     if (!event_queue.empty())
     {
-        Event event = event_queue.front();
-        threads.push_back(CreateThread(event));
+        EventDispatcher event_dispatcher = *event_queue.front();
+        std::list<CallbackFunction>* callbacks = event_dispatcher.GetCallbacks();
+        for (std::list<CallbackFunction>::iterator it = callbacks->begin(); it != callbacks->end(); ++it)
+        {
+            Event event = event_dispatcher.DispatchEvent();
+            threads.push_back(std::thread(*it, event));
+        }
         event_queue.pop_front();
     }
 }
@@ -80,11 +73,6 @@ void EventSystem::YieldAll()
         it->join();
     }
     threads.clear();
-}
-
-std::thread EventSystem::CreateThread(Event event)
-{
-    return std::thread(&Event::Process, event);
 }
 
 void EventSystem::ProcessAllAndYieldAll()

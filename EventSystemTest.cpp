@@ -1,114 +1,96 @@
+//#include "Event.h"
+//#include "EventDispatcher.h"
+//#include "EventSystem.h"
+
+//struct TestEvent : Event
+//{
+//    const char* message;
+//};
+
+//class TestEventDispatcher : public EventDispatcher
+//{
+//    const char* message;
+//public:
+//    TestEventDispatcher();
+//    TestEvent DispatchEvent();
+//};
+
+//TestEventDispatcher::TestEventDispatcher() : EventDispatcher(0, 0)
+//{
+ //   message = "Test Message\n";
+//}
+
+//TestEvent TestEventDispatcher::DispatchEvent()
+//{
+//    TestEvent te = TestEvent{};
+//    te.event_id = GetId();
+//    te.owner_object_id = GetOwnerId();
+//    te.message = message;
+//    return te;
+//}
+
+//int main()
+//{
+//    std::cout << "Stating Event System Test\n";
+//    std::cout << "Creating Event System...\n";
+//    EventSystem* event_system = new EventSystem();
+//    if (!event_system)
+//    {
+//        std::cout << "Failed!\n";
+//    }
+//    else
+//    {
+//        std::cout << "Success!\n";
+//    }
+
+//    TestEventDispatcher test_dispatcher = TestEventDispatcher();
+//    int event_id = test_dispatcher.GetId();
+
+//    event_system->AddEvent(test_dispatcher);
+
+//    std::cout << "Test 1\n";
+//    event_system->CallEvent(event_id);
+//    event_system->ProcessAllAndYieldAll();
+//    std::cout << "Finished!\n";
+//}
+
+#include <list>
+#include <iostream>
+#include <thread>
 #include "Event.h"
 #include "EventDispatcher.h"
 #include "EventSystem.h"
-int TestEventID = 0;
-int TestEventID2 = 1;
-class TestEvent : public Event
+
+typedef void (*CallbackFunction)(Event event);
+
+class CallbackTest
 {
 public:
-    TestEvent();
+    CallbackTest();
+    static void callback(Event event);
 };
 
-TestEvent::TestEvent() : Event(TestEventID)
+CallbackTest::CallbackTest()
 {
 
 }
 
-class TestEvent2 : public Event
+void CallbackTest::callback(Event event)
 {
-public:
-    TestEvent2();
-};
-
-TestEvent2::TestEvent2() : Event(TestEventID2)
-{
-
-}
-
-class TestEventDispatcher : public EventDispatcher
-{
-public:
-    TestEventDispatcher(EventSystem* event_system);
-    Event DispatchEvent();
-};
-
-TestEventDispatcher::TestEventDispatcher(EventSystem* event_system) : EventDispatcher(event_system, TestEventID)
-{
-
-}
-
-Event TestEventDispatcher::DispatchEvent()
-{
-    return TestEvent();
-}
-
-class TestEventDispatcher2 : public EventDispatcher
-{
-public:
-    TestEventDispatcher2(EventSystem* event_system);
-    Event DispatchEvent();
-};
-
-TestEventDispatcher2::TestEventDispatcher2(EventSystem* event_system) : EventDispatcher(event_system, TestEventID2)
-{
-
-}
-
-Event TestEventDispatcher2::DispatchEvent()
-{
-    return TestEvent2();
+    std::cout << event.event_id << "\n";
 }
 
 int main()
 {
-    std::cout << "Stating Event System Test\n";
-    std::cout << "Creating Event System...\n";
-    EventSystem* event_system = new EventSystem();
-    if (!event_system)
-    {
-        std::cout << "Failed!\n";
-    }
-    else
-    {
-        std::cout << "Success!\n";
-    }
-    TestEventDispatcher test_dispatcher = TestEventDispatcher(event_system);
-    int event_id = test_dispatcher.GetId();
-    TestEventDispatcher2 test_dispatcher2 = TestEventDispatcher2(event_system);
-    int event_id2 = test_dispatcher2.GetId();
-    event_system->AddEvent(test_dispatcher);
-    event_system->AddEvent(test_dispatcher2);
+    EventSystem event_system = EventSystem();
+    EventDispatcher event_dispatcher = EventDispatcher(0,0);
+    CallbackTest test = CallbackTest();
 
-    std::cout << "Test 1\n";
-    event_system->CallEvent(event_id);
-    event_system->ProcessQueue();
-    event_system->Yield();
+    event_system.AddEvent(event_dispatcher);
+    event_system.Bind(0,&test.callback);
+    event_system.CallEvent(0);
+    event_system.ProcessQueue();
+    event_system.YieldAll();
 
-    std::cout << "Test 2\n";
-    event_system->CallEvent(event_id);
-    event_system->CallEvent(event_id);
-    event_system->ProcessQueue();
-    event_system->ProcessQueue();
-    event_system->Yield();
-
-    std::cout << "Test 3\n";
-    event_system->CallEvent(event_id);
-    event_system->CallEvent(event_id);
-    event_system->ProcessQueue();
-    event_system->Yield();
-    event_system->ProcessQueue();
-    event_system->Yield();
-
-    std::cout << "Test 4\n";
-    event_system->CallEvent(event_id);
-    event_system->CallEvent(event_id);
-    event_system->CallEvent(event_id);
-    event_system->CallEvent(event_id);
-    event_system->ProcessAllAndYieldAll();
-
-    std::cout << "Test 5\n";
-    event_system->Bind(event_id, event_id2);
-    event_system->CallEvent(event_id);
-    event_system->ProcessAllAndYieldAll();
-    std::cout << "Finished!\n";
+    return 0;
 }
