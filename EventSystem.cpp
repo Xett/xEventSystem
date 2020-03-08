@@ -1,39 +1,32 @@
 ﻿#include "Event.h"
 #include "EventDispatcher.h"
 #include "EventSystem.h"
-
 EventSystem::EventSystem()
 {
     std::map<int, EventDispatcher*> event_dispatchers = std::map<int, EventDispatcher*>();
     std::list<EventDispatcher*> event_queue = std::list<EventDispatcher*>();
     std::list<std::thread> threads = std::list<std::thread>();
 }
-
 void EventSystem::CallEvent(int event_id)
 {
     event_queue.push_back(event_dispatchers[event_id]); 
 }
-
 void EventSystem::AddEvent(EventDispatcher &event_dispatcher)
 {
     event_dispatchers.insert(std::pair<int, EventDispatcher*>(event_dispatcher.GetId(), &event_dispatcher));
 }
-
 void EventSystem::RemoveEvent(EventDispatcher &event_dispatcher)
 {
     event_dispatchers.erase(event_dispatchers.find(event_dispatcher.GetId()));
 }
-
 void EventSystem::Bind(int event_id, CallbackFunction callback_function)
 {
     event_dispatchers[event_id]->GetCallbacks()->push_back(callback_function);
 }
-
 void EventSystem::Unbind(int event_id, CallbackFunction callback_function)
 {
     event_dispatchers[event_id]->GetCallbacks()->remove(callback_function);
 }
-
 void EventSystem::ProcessQueue()
 {
     if (!event_queue.empty())
@@ -48,7 +41,6 @@ void EventSystem::ProcessQueue()
         event_queue.pop_front();
     }
 }
-
 void EventSystem::ProcessAll()
 {
     while (!event_queue.empty())
@@ -56,7 +48,6 @@ void EventSystem::ProcessAll()
         ProcessQueue();
     }
 }
-
 void EventSystem::Yield()
 {
     if (!threads.empty())
@@ -65,7 +56,6 @@ void EventSystem::Yield()
         threads.pop_front();
     }
 }
-
 void EventSystem::YieldAll()
 {
     for (std::list<std::thread>::iterator it = threads.begin(); it != threads.end(); ++it)
@@ -74,7 +64,6 @@ void EventSystem::YieldAll()
     }
     threads.clear();
 }
-
 void EventSystem::ProcessAllAndYieldAll()
 {
     ProcessAll();

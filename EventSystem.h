@@ -1,5 +1,4 @@
-﻿#include <iostream>
-#include <list>
+﻿#include <list>
 #include <map>
 #include <thread>
 struct Event;
@@ -26,5 +25,4 @@ public:
     void YieldAll();
     void ProcessAllAndYieldAll();
 };
-
 #endif
