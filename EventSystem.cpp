@@ -29,10 +29,10 @@ void EventSystem::Bind(int event_id, CallbackFunction callback_function)
     event_dispatchers[event_id]->GetCallbacks()->push_back(callback_function);
 }
 
-//void EventSystem::Unbind(int event_id, void* callback_function)
-//{
-//    event_dispatchers[event_id]->GetCallbacks()->remove(&callback_function);
-//}
+void EventSystem::Unbind(int event_id, CallbackFunction callback_function)
+{
+    event_dispatchers[event_id]->GetCallbacks()->remove(callback_function);
+}
 
 void EventSystem::ProcessQueue()
 {

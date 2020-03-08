@@ -8,6 +8,7 @@ class EventDispatcher
 {
 	int event_id;
 	int owner_id;
+	std::list<CallbackFunction> callbacks;
 public:
 	EventDispatcher();
 	EventDispatcher(int owner_id);
@@ -18,7 +19,6 @@ public:
 	int GetId();
 	int GetOwnerId();
 	std::list<CallbackFunction>* GetCallbacks();
-	std::list<CallbackFunction> callbacks;
 	Event DispatchEvent();
 };
 #endif

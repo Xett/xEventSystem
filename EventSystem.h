@@ -11,20 +11,20 @@ typedef void (*CallbackFunction)(Event event);
 class EventSystem
 {
     std::map<int, EventDispatcher*> event_dispatchers;
+    std::list<std::thread> threads;
+    std::list<EventDispatcher*> event_queue;
 public:
     EventSystem();
     void CallEvent(int event_id);
     void AddEvent(EventDispatcher &event_dispatcher);
     void RemoveEvent(EventDispatcher &event_dispatcher);
     void Bind(int event_id, CallbackFunction callback_function);
-    //void Unbind(int event_id, void* callback_function);
+    void Unbind(int event_id, CallbackFunction callback_function);
     void ProcessQueue();
     void ProcessAll();
     void Yield();
     void YieldAll();
     void ProcessAllAndYieldAll();
-    std::list<std::thread> threads;
-    std::list<EventDispatcher*> event_queue;
 };
 
 #endif
