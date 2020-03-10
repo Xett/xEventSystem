@@ -101,3 +101,9 @@ void EventSystem::Close()
     StopMainLoopThread();
     YieldAll();
 }
+
+void EventSystem::Start()
+{
+    running = true;
+    StartMainLoopThread();
+}

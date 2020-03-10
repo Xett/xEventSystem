@@ -30,6 +30,7 @@ public:
     void StartMainLoopThread();
     void StopMainLoopThread();
     bool IsRunning();
+    void Start();
     void Close();
 };
 #endif
