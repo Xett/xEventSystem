@@ -1,11 +1,13 @@
 ﻿#include "Event.h"
 #include "EventDispatcher.h"
 #include "EventSystem.h"
+#include <iostream>
 EventSystem::EventSystem()
 {
     std::map<int, EventDispatcher*> event_dispatchers = std::map<int, EventDispatcher*>();
     std::list<EventDispatcher*> event_queue = std::list<EventDispatcher*>();
     std::list<std::thread> threads = std::list<std::thread>();
+    running = true;
 }
 void EventSystem::CallEvent(int event_id)
 {
@@ -67,5 +69,35 @@ void EventSystem::YieldAll()
 void EventSystem::ProcessAllAndYieldAll()
 {
     ProcessAll();
+    YieldAll();
+}
+
+void EventSystem::MainLoopWorker(EventSystem* event_system)
+{
+    while (event_system->IsRunning())
+    {
+        event_system->ProcessAllAndYieldAll();
+    }
+}
+
+void EventSystem::StartMainLoopThread()
+{
+    main_loop_thread = std::thread(MainLoopWorker, this);
+}
+
+void EventSystem::StopMainLoopThread()
+{
+    main_loop_thread.join();
+}
+
+bool EventSystem::IsRunning()
+{
+    return running;
+}
+
+void EventSystem::Close()
+{
+    running = false;
+    StopMainLoopThread();
     YieldAll();
 }

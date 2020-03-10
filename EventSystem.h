@@ -1,7 +1,7 @@
 ﻿#include <list>
 #include <map>
 #include <thread>
-struct Event;
+class Event;
 class EventDispatcher;
 class EventSystem;
 typedef void (*CallbackFunction)(Event event);
@@ -12,6 +12,8 @@ class EventSystem
     std::map<int, EventDispatcher*> event_dispatchers;
     std::list<std::thread> threads;
     std::list<EventDispatcher*> event_queue;
+    std::thread main_loop_thread;
+    bool running;
 public:
     EventSystem();
     void CallEvent(int event_id);
@@ -24,5 +26,10 @@ public:
     void Yield();
     void YieldAll();
     void ProcessAllAndYieldAll();
+    static void MainLoopWorker(EventSystem* event_system);
+    void StartMainLoopThread();
+    void StopMainLoopThread();
+    bool IsRunning();
+    void Close();
 };
 #endif

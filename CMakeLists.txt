@@ -1,5 +1,5 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 project ("xEventSystem")
-add_library (xEventSystem STATIC "Event.h" "EventDispatcher.h" "EventDispatcher.cpp" "EventSystem.cpp" "EventSystem.h")
+add_library (xEventSystem STATIC "Event.h" "Event.cpp" "EventDispatcher.h" "EventDispatcher.cpp" "EventSystem.cpp" "EventSystem.h")
 add_executable( EventSystemTest "EventSystemTest.cpp")
 target_link_libraries( EventSystemTest xEventSystem )

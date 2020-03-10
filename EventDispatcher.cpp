@@ -31,7 +31,7 @@ void EventDispatcher::Create(int owner_id, int event_id)
 }
 Event EventDispatcher::DispatchEvent()
 {
-    return Event{event_id,owner_id};
+    return Event(event_id,owner_id);
 }
 bool EventDispatcher::operator==(const EventDispatcher& a)
 {

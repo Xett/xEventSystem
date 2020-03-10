@@ -1,5 +1,5 @@
 #include <list>
-struct Event;
+class Event;
 class EventSystem;
 typedef void (*CallbackFunction)(Event event);
 #ifndef EVENT_DISPATCHER_H

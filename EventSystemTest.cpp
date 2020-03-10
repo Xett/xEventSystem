@@ -17,7 +17,7 @@ CallbackTest::CallbackTest()
 }
 void CallbackTest::callback(Event event)
 {
-    std::cout << event.event_id << "\n";
+    std::cout << event.GetEventId() << "\n";
 }
 class TestEventDispatcher : public EventDispatcher
 {
@@ -33,12 +33,13 @@ TestEventDispatcher::TestEventDispatcher(int id) : EventDispatcher(0,id)
 int main()
 {
     EventSystem event_system = EventSystem();
+    event_system.StartMainLoopThread();
     TestEventDispatcher event_dispatcher = TestEventDispatcher(0);
     CallbackTest test = CallbackTest();
     event_system.AddEvent(event_dispatcher);
     event_system.Bind(event_dispatcher.GetId(),&test.callback);
     event_system.CallEvent(event_dispatcher.GetId());
-    event_system.ProcessQueue();
-    event_system.YieldAll();
+    _sleep(5);
+    event_system.Close();
     return 0;
 }
