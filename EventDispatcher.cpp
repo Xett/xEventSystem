@@ -4,34 +4,20 @@ EventDispatcher::EventDispatcher()
 {
     // Default constructor, use create to initialise in a 2-step process
     event_id = -1;
-    owner_id = -1;
     this->callbacks = std::list<CallbackFunction>();
 }
-EventDispatcher::EventDispatcher(int owner_id)
+EventDispatcher::EventDispatcher(int event_id)
 {
-    this->owner_id = owner_id;
-    this->event_id = -1;
-    this->callbacks = std::list<CallbackFunction>();
-}
-EventDispatcher::EventDispatcher(int owner_id, int event_id)
-{
-    this->owner_id = owner_id;
     this->event_id = event_id;
     this->callbacks = std::list<CallbackFunction>();
 }
-void EventDispatcher::Create(int owner_id)
+void EventDispatcher::Create(int event_id)
 {
-    this->owner_id = owner_id;
-    this->event_id = -1;
-}
-void EventDispatcher::Create(int owner_id, int event_id)
-{
-    this->owner_id = owner_id;
     this->event_id = event_id;
 }
 Event EventDispatcher::DispatchEvent()
 {
-    return Event(event_id,owner_id);
+    return Event(event_id);
 }
 bool EventDispatcher::operator==(const EventDispatcher& a)
 {
@@ -40,10 +26,6 @@ bool EventDispatcher::operator==(const EventDispatcher& a)
 int EventDispatcher::GetId()
 {
     return event_id;
-}
-int EventDispatcher::GetOwnerId()
-{
-    return owner_id;
 }
 std::list<CallbackFunction>* EventDispatcher::GetCallbacks()
 {

@@ -18,14 +18,21 @@ CallbackTest::CallbackTest()
 void CallbackTest::callback(Event event)
 {
     std::cout << event.GetEventId() << "\n";
+    std::cout.flush();
 }
 class TestEventDispatcher : public EventDispatcher
 {
 public:
+    TestEventDispatcher();
     TestEventDispatcher(int id);
 };
 
-TestEventDispatcher::TestEventDispatcher(int id) : EventDispatcher(0,id)
+TestEventDispatcher::TestEventDispatcher() : EventDispatcher()
+{
+
+}
+
+TestEventDispatcher::TestEventDispatcher(int id) : EventDispatcher(id)
 {
 
 }
